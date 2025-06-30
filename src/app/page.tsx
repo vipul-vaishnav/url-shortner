@@ -1,13 +1,11 @@
-'use client'
-
-import { Button } from '@/components/ui/button'
-import { trpc } from '@/utils/trpc'
+import UrlForm from '@/components/url-form'
 
 export default function Home() {
-  const { data } = trpc.example.hello.useQuery({ text: 'Vipul' })
   return (
-    <div className="h-screen flex items-center justify-center">
-      <Button size={'lg'}>Click Me! {data?.greeting}</Button>
-    </div>
+    <main className="flex min-h-screen flex-col items-center justify-center sm:px-24 py-22 px-8">
+      <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-center">⚡ ZURL - URL Shortener</h1>
+      <p className="mt-4 text-lg font-medium text-center text-muted-foreground">Welcome to the ZURL URL Shortener!</p>
+      <UrlForm />
+    </main>
   )
 }
