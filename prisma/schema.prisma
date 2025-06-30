@@ -13,3 +13,29 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model Machine {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  machineId String     @unique
+  counter   Int        @default(0)
+  createdAt DateTime   @default(now())
+  urls      ShortUrl[]
+}
+
+model ShortUrl {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  slug             String    @unique
+  title            String?
+  destinationUrl   String
+  analyticsEnabled Boolean   @default(false)
+  clicks           Int       @default(0)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastClickedAt    DateTime?
+
+  machineId String
+  machine   Machine @relation(fields: [machineId], references: [machineId], onDelete: Cascade)
+
+  @@index([createdAt]) // useful for sorting/filtering
+  @@index([lastClickedAt]) // analytics + sorting
+}
