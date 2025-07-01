@@ -1,42 +1,39 @@
 'use client'
 
-import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, X } from 'lucide-react'
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card'
 import { AnimatePresence, motion } from 'motion/react'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import useMeasure from 'react-use-measure'
+import { z } from 'zod/v4'
+
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Checkbox } from './ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod/v4'
-import { Checkbox } from './ui/checkbox'
 
-const FormSchema = z.object({
-  title: z.string().min(4, {
-    message: 'Title must be at least 4 characters.'
-  }),
-  destinationUrl: z
-    .url({
-      protocol: /^https?$/,
-      hostname: /^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/,
-      error: 'Invalid URL format'
-    })
-    .refine(
-      (ctx) => {
-        if (!ctx.startsWith('http://')) {
-          return true
-        }
-      },
-      { error: 'URL must start with https://' }
-    ),
-  enableAnalytics: z.boolean()
-})
+import { FormSchema } from '@/schema/FormSchema'
+import { trpc } from '@/utils/trpc'
+import { getMachineId } from '@/lib/get-machine-id'
 
 const UrlForm: React.FC = () => {
   const [open, setOpen] = useState(false)
   const [ref, bounds] = useMeasure()
+  const [machineId, setMachineId] = useState<string | null>(null)
+  const [formState, setFormState] = useState<'fill' | 'success' | 'error'>('fill')
+
+  const { isPending, mutate } = trpc.url.shortenUrl.useMutation({
+    onSuccess: () => {
+      setMachineId(null)
+      setFormState('success')
+    },
+    onError: (error) => {
+      setFormState('error')
+      console.error('Error shortening URL:', error)
+    }
+  })
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -48,8 +45,12 @@ const UrlForm: React.FC = () => {
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data)
+    mutate({ ...data, machineId: machineId || 'unknown-machine-id' })
   }
+
+  useEffect(() => {
+    getMachineId().then((id) => setMachineId(id))
+  }, [])
 
   return (
     <motion.div animate={{ height: bounds.height }} className="w-full max-w-screen-md mx-auto">
@@ -63,7 +64,14 @@ const UrlForm: React.FC = () => {
             layoutId="wrapper"
             className="grid place-content-center"
           >
-            <Button onClick={() => setOpen(true)} className="mt-6" size={'lg'}>
+            <Button
+              onClick={() => {
+                setOpen(true)
+                setFormState('fill')
+              }}
+              className="mt-6"
+              size={'lg'}
+            >
               <motion.div layoutId="title" className="flex items-center gap-2">
                 <Link />
                 Create New Link
@@ -147,7 +155,7 @@ const UrlForm: React.FC = () => {
                         />
                         <div className="flex items-center justify-end">
                           <Button type="submit" size="lg">
-                            Shorten Link
+                            {isPending ? 'Shortening...' : 'Shorten Link'}
                           </Button>
                         </div>
                       </form>
