@@ -54,10 +54,27 @@ const UrlForm: React.FC = () => {
   return (
     <motion.div animate={{ height: bounds.height }} className="w-full max-w-screen-md mx-auto">
       <div ref={ref}>
-        {open ? (
-          <AnimatePresence>
+        <AnimatePresence initial={false}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: open ? 0 : 1, visibility: open ? 'hidden' : 'visible' }}
+            exit={{ opacity: 0 }}
+            key="button"
+            layoutId="wrapper"
+            className="grid place-content-center"
+          >
+            <Button onClick={() => setOpen(true)} className="mt-6" size={'lg'}>
+              <motion.div layoutId="title" className="flex items-center gap-2">
+                <Link />
+                Create New Link
+              </motion.div>
+            </Button>
+          </motion.div>
+        </AnimatePresence>
+        <AnimatePresence>
+          {open ? (
             <motion.div layoutId="wrapper">
-              <Card className="mt-6 sm:px-6 px-2 py-6">
+              <Card className="-mt-6 sm:px-6 px-2 py-6">
                 <CardHeader>
                   <CardTitle>
                     <motion.div layoutId="title" className="flex items-center gap-2">
@@ -139,19 +156,8 @@ const UrlForm: React.FC = () => {
                 </CardContent>
               </Card>
             </motion.div>
-          </AnimatePresence>
-        ) : (
-          <AnimatePresence>
-            <motion.div layoutId="wrapper" className="grid place-content-center">
-              <Button onClick={() => setOpen(true)} className="mt-6" size={'lg'}>
-                <motion.div layoutId="title" className="flex items-center gap-2">
-                  <Link />
-                  Create New Link
-                </motion.div>
-              </Button>
-            </motion.div>
-          </AnimatePresence>
-        )}
+          ) : null}
+        </AnimatePresence>
       </div>
     </motion.div>
   )
