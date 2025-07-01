@@ -1,8 +1,10 @@
 import { urlRouterCaller } from '@/server/routers/url-router'
 import { notFound, redirect } from 'next/navigation'
 
-export default async function Slug({ params }: { params: { slug: string } }) {
-  const { slug } = params
+type Params = Promise<{ slug: string }>
+
+export default async function Slug(props: { params: Params }) {
+  const { slug } = await props.params
 
   const { destinationUrl } = await urlRouterCaller.getUrlBySlug(slug)
 
