@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚡ ZURL - URL Shortener
 
-## Getting Started
+![ZURL Homepage](./public/preview.png)
 
-First, run the development server:
+Welcome to **ZURL**, a modern, blazing-fast URL shortener built with the latest web technologies. Easily generate and share short, trackable links from a clean, responsive UI.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🔗 Shorten long URLs quickly
+- 📈 Optional click analytics tracking
+- 🔒 Unique slug generation per machine using hashed IDs and counters
+- 📁 Store links with metadata like title, creation time, and analytics toggle
+- ⚡ Instant redirection using tRPC with no UI flash
+- 🧠 Form validation with Zod (v4)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧰 Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+| Layer      | Technology                                       |
+| ---------- | ------------------------------------------------ |
+| Framework  | [Next.js](https://nextjs.org) (App Router)       |
+| Language   | TypeScript                                       |
+| Styling    | Tailwind CSS, [shadcn/ui](https://ui.shadcn.com) |
+| Backend    | tRPC (Server & Client)                           |
+| ORM        | Prisma                                           |
+| Database   | MongoDB                                          |
+| Caching    | Redis (planned)                                  |
+| Validation | [Zod v4](https://zod.dev)                        |
+| Hosting    | [Vercel](https://vercel.com) (Recommended)       |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
