@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Darker_Grotesque } from 'next/font/google'
 import './globals.css'
 import { TRPCProvider } from '@/components/TRPCProvider'
+import { Toaster } from 'sonner'
 
 const darkerGrotesque = Darker_Grotesque({
   subsets: ['latin'],
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${darkerGrotesque.className} antialiased`}>
+        <Toaster />
         <TRPCProvider>{children}</TRPCProvider>
       </body>
     </html>
