@@ -1,16 +1,23 @@
 import { urlRouterCaller } from '@/server/routers/url-router'
+import { TRPCError } from '@trpc/server'
 import { notFound, redirect } from 'next/navigation'
 
-type Params = Promise<{ slug: string }>
+export default async function Slug({ params }: { params: { slug: string } }) {
+  let destinationUrlVal: string
+  try {
+    const { slug } = params
+    const { destinationUrl } = await urlRouterCaller.getUrlBySlug(slug)
 
-export default async function Slug(props: { params: Params }) {
-  const { slug } = await props.params
+    destinationUrlVal = destinationUrl
+  } catch (error: unknown) {
+    console.error('Error while resolving slug:', error)
 
-  const { destinationUrl } = await urlRouterCaller.getUrlBySlug(slug)
+    if (error instanceof TRPCError && error?.code === 'NOT_FOUND') {
+      return notFound()
+    }
 
-  if (!destinationUrl) {
-    notFound()
+    return notFound()
   }
 
-  redirect(destinationUrl)
+  redirect(destinationUrlVal)
 }

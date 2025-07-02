@@ -4,6 +4,7 @@ import { z } from 'zod/v4'
 import { v4 as uuidv4 } from 'uuid'
 import { prisma } from '@/lib/prisma'
 import { generateSlug } from '@/lib/generate-slug'
+import { TRPCError } from '@trpc/server'
 
 const urlRouter = router({
   shortenUrl: procedure
@@ -68,7 +69,10 @@ const urlRouter = router({
         })
 
         if (!shortUrl) {
-          throw new Error('Destination URL not found')
+          throw new TRPCError({
+            code: 'NOT_FOUND',
+            message: 'Slug not found'
+          })
         }
 
         if (shortUrl.analyticsEnabled) {
